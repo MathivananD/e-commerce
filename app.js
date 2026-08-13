@@ -7,6 +7,10 @@ const User = require('./models/user');
 const validate = require('./validators/custom.validators');
 const userValidation = require('./validators/user.validation');
 const { successResponse, errorResponse } = require('./utils/response');
+const userRouter = require('./routes/user.routes');
+const errorMiddleware = require('./middleware/error.middleware');
+const AppError = require('./utils/app-error');
+const { ERROR } = require('./constants/error-code.constants');
 
 dotConfigure.init().then(() => {
     const PORT = process.env.PORT || 3000;
@@ -19,20 +23,19 @@ dotConfigure.init().then(() => {
 
 
 app.use(bodyparser.json());
-
 app.use(corsMiddleware);
 
 app.get('/', (req, res) => {
-    console.log(req.headers);
-   return successResponse(res, 200, 'Server is running');
+    return successResponse(res, 200, 'Server is running');
 
 });
 
-app.post('/', validate(userValidation), (req, res) => {
-    res.status(200).json({ message: 'Added succesfuly' });
+app.use('/user', validate(userValidation), userRouter);
 
-});
 
-app.use((req, res) => {
-    res.status(404).json({ message: 'Route not found' });
+
+app.use((req, res, next) => {
+    const error = ERROR.ROUTE_NOT_FOUND;
+    next(new AppError(error.message, error.statusCode, error.code))
 })
+app.use(errorMiddleware)

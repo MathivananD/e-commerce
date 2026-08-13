@@ -32,7 +32,7 @@ const userSchema = new Schema({
     status: {
         type: String,
         enum: Object.values(USER_STATUS),
-        required: true,
+        default: USER_STATUS.ACTIVE,
     }
 
 })

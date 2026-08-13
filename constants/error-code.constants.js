@@ -1,27 +1,51 @@
-const ERROR_CODE = {
-    EMAIL_ALREADY_EXISTS: 10,
-    USER_NOT_FOUND: 11,
-    INVALID_PASSWORD: 12,
-    PRODUCT_NOT_FOUND: 20,
-    OUT_OF_STOCK: 21,
-    ORDER_NOT_FOUND: 30,
-    PAYMENT_FAILED: 40
+const ERROR = {
+  USER_NOT_FOUND: {
+    code: 210,
+    statusCode: 404,
+    message: 'User not found'
+  },
+
+  EMAIL_ALREADY_EXISTS: {
+    code: 211,
+    statusCode: 409,
+    message: 'Email already exists'
+  },
+
+  INVALID_PASSWORD: {
+    code: 212,
+    statusCode: 401,
+    message: 'Invalid password'
+  },
+
+  PRODUCT_NOT_FOUND: {
+    code: 213,
+    statusCode: 404,
+    message: 'Product not found'
+  },
+
+  OUT_OF_STOCK: {
+    code: 214,
+    statusCode: 409,
+    message: 'Product is out of stock'
+  },
+  ROUTE_NOT_FOUND: {
+    code: 220,
+    statusCode: 404,
+    message: 'Route not found'
+  },
+  RUNNING: {
+    code: 230,
+    statusCode: 404,
+    message: 'Server is running'
+  },
+  VALIDATION_ERROR: {
+    code: 240,
+    statusCode: 400,
+    message: 'Validation error'
+  }
 };
-
-const ERROR_CODE_MESSAGES = {
-    USER_NOT_FOUND: 'USER_NOT_FOUND',
-    EMAIL_ALREADY_EXISTS: 'EMAIL_ALREADY_EXISTS',
-    INVALID_PASSWORD: 'INVALID_PASSWORD',
-    INVALID_TOKEN: 'INVALID_TOKEN',
-    PRODUCT_NOT_FOUND: 'PRODUCT_NOT_FOUND',
-    OUT_OF_STOCK: 'OUT_OF_STOCK',
-    ORDER_NOT_FOUND: 'ORDER_NOT_FOUND',
-    PAYMENT_FAILED: 'PAYMENT_FAILED'
-};;
-
 
 
 module.exports = {
-    ERROR_CODE,
-    ERROR_CODE_MESSAGES
+    ERROR
 };

@@ -1,4 +1,5 @@
-
+const AppError = require('../utils/app-error');
+const { ERROR } = require('../constants/error-code.constants');
 const validate = (schema) => {
     return (req, res, next) => {
 
@@ -13,10 +14,8 @@ const validate = (schema) => {
                     message: error.message
                 };
             });
-            return res.status(819).json({
-                message: 'Validation failed',
-                errors: errors
-            });
+            const error=ERROR.VALIDATION_ERROR;
+            throw new AppError(error.message, error.statusCode, error.code, errors);
         }
 
         req.body = result.data;

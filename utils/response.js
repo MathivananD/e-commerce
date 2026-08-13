@@ -18,12 +18,15 @@ const errorResponse = (
     message,
     errors = null
 ) => {
-    return res.status(statusCode).json({
+    let response = {
         success: false,
         message,
         statusCode: statusCode,
-        errors
-    });
+    }
+    if (errors != null) {
+        response.errors = errors
+    }
+    return res.status(statusCode).json(response);
 };
 
 module.exports = {
