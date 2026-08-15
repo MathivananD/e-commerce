@@ -4,7 +4,6 @@ const userController = require('../controller/user.controller');
 const validate = require('../validators/custom.validators');
 const { userSchemaValidation, userUpdateSchemaValidation } = require('../validators/user.validation');
 const { successResponse, errorResponse } = require('../utils/response');
-const authMiddleWare = require('../middleware/auth.middleware');
 
 /**
  * @openapi
@@ -60,6 +59,6 @@ router.get('/', userController.getUser);
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/update', authMiddleWare, validate(userUpdateSchemaValidation), userController.updateUser);
+router.put('/update', validate(userUpdateSchemaValidation), userController.updateUser);
 
 module.exports = router;

@@ -54,6 +54,16 @@ const ERROR = {
     statusCode: 400,
     message: 'Validation error'
   },
+  TOKEN_EXPIRED: {
+    code: 241,
+    statusCode: 401,
+    message: 'Token Expired'
+  },
+  REFRESH_TOKEN_EXPIRED: {
+    code: 241,
+    statusCode: 401,
+    message: 'Token Expired'
+  },
 
  
 };
