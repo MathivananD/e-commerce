@@ -20,8 +20,8 @@ const errorResponse = (
 ) => {
     let response = {
         success: false,
-        message,
-        statusCode: statusCode,
+        message:message || 'An error occurred',
+        statusCode: statusCode|| 500,
     }
     if (errors != null) {
         response.errors = errors

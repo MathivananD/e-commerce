@@ -20,4 +20,4 @@ const userUpdateSchemaValidation = z.object({
     countryCode: z.string().length(2).optional(),
     phoneNumber: z.string().length(10).optional()
 }).strict();
-module.exports = userSchemaValidation;
+module.exports = {userSchemaValidation,userUpdateSchemaValidation};

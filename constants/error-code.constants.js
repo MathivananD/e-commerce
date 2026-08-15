@@ -1,4 +1,6 @@
 const ERROR = {
+
+
   USER_NOT_FOUND: {
     code: 210,
     statusCode: 404,
@@ -10,7 +12,16 @@ const ERROR = {
     statusCode: 409,
     message: 'Email already exists'
   },
-
+ UNAUTHORIZED: {
+    code: 216,
+    statusCode: 400,
+    message: 'Un authorised entry'
+  },
+   INVALIDTOken: {
+    code: 217,
+    statusCode: 410,
+    message: 'invalid TOken'
+  },
   INVALID_PASSWORD: {
     code: 212,
     statusCode: 401,
@@ -42,7 +53,9 @@ const ERROR = {
     code: 240,
     statusCode: 400,
     message: 'Validation error'
-  }
+  },
+
+ 
 };
 
 

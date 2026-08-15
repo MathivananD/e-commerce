@@ -14,8 +14,7 @@ const validate = (schema) => {
                     message: error.message
                 };
             });
-            const error=ERROR.VALIDATION_ERROR;
-            throw new AppError(error.message, error.statusCode, error.code, errors);
+            throw new AppError(ERROR.VALIDATION_ERROR, errors);
         }
 
         req.body = result.data;

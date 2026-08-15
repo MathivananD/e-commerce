@@ -29,7 +29,7 @@ const options = {
         },
       },
       schemas: {
-        UserInput: {
+        RegisterInput: {
           type: 'object',
           required: [
             'name',
@@ -39,7 +39,6 @@ const options = {
             'countryCode',
             'phoneNumber',
             'role',
-            'status',
           ],
           properties: {
             name: {
@@ -66,7 +65,84 @@ const options = {
             },
             countryCode: {
               type: 'string',
-              example: '+1',
+              example: 'US',
+              minLength: 2,
+              maxLength: 2,
+            },
+            phoneNumber: {
+              type: 'string',
+              example: '1234567890',
+              minLength: 10,
+              maxLength: 10,
+            },
+            role: {
+              type: 'string',
+              enum: ['admin', 'customer'],
+              example: 'customer',
+            },
+          },
+        },
+        LoginInput: {
+          type: 'object',
+          required: ['email', 'password'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'john.doe@example.com',
+            },
+            password: {
+              type: 'string',
+              format: 'password',
+              example: 'secret123',
+            },
+          },
+        },
+        UserUpdateInput: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              example: 'John Doe Updated',
+              minLength: 3,
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'john.updated@example.com',
+            },
+            countryCode: {
+              type: 'string',
+              example: 'US',
+              minLength: 2,
+              maxLength: 2,
+            },
+            phoneNumber: {
+              type: 'string',
+              example: '0987654321',
+              minLength: 10,
+              maxLength: 10,
+            },
+          },
+        },
+        UserResponse: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              example: '60d0fe4f5311236168a109ca',
+            },
+            name: {
+              type: 'string',
+              example: 'John Doe',
+            },
+            email: {
+              type: 'string',
+              example: 'john.doe@example.com',
+            },
+            countryCode: {
+              type: 'string',
+              example: 'US',
             },
             phoneNumber: {
               type: 'string',
@@ -74,12 +150,10 @@ const options = {
             },
             role: {
               type: 'string',
-              enum: ['ADMIN', 'USER'],
-              example: 'USER',
+              example: 'customer',
             },
             status: {
               type: 'string',
-              enum: ['ACTIVE', 'INACTIVE'],
               example: 'ACTIVE',
             },
           },
@@ -105,7 +179,7 @@ const options = {
             },
           },
         },
-        ValidationErrorResponse: {
+        ErrorResponse: {
           type: 'object',
           properties: {
             success: {
@@ -118,31 +192,11 @@ const options = {
             },
             message: {
               type: 'string',
-              example: 'Validation failed',
+              example: 'Error description',
             },
-            errors: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  field: {
-                    type: 'string',
-                    example: 'email',
-                  },
-                  value: {
-                    type: 'string',
-                    example: 'invalid-email',
-                  },
-                  expected: {
-                    type: 'string',
-                    example: 'email',
-                  },
-                  message: {
-                    type: 'string',
-                    example: 'Invalid email',
-                  },
-                },
-              },
+            error: {
+              type: 'object',
+              nullable: true,
             },
           },
         },

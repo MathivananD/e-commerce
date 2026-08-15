@@ -1,10 +1,16 @@
 class AppError extends Error {
-  constructor(message, statusCode, errorCode,error) {
-    super(message);
-
-    this.statusCode = statusCode;
-    this.errorCode = errorCode;
-     this.error = error;
+  constructor(errorObj, extraError = null) {
+    if (typeof errorObj === 'object' && errorObj !== null) {
+      super(errorObj.message || 'An error occurred');
+      this.statusCode = errorObj.statusCode || 500;
+      this.errorCode = errorObj.code || errorObj.errorCode;
+      this.error = extraError !== null ? extraError : (errorObj.error || null);
+    } else {
+      super(errorObj || 'An error occurred');
+      this.statusCode = arguments[1] || 500;
+      this.errorCode = arguments[2];
+      this.error = arguments[3] || null;
+    }
 
     Error.captureStackTrace(this, this.constructor);
   }
