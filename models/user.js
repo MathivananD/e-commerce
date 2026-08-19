@@ -35,6 +35,8 @@ const userSchema = new Schema({
         default: USER_STATUS.ACTIVE,
     }
 
+}, {
+    versionKey: false
 })
 
 module.exports = mongoose.model('User', userSchema)

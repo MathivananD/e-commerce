@@ -1,44 +1,25 @@
-
-const {successResponse, errorResponse } = require('../utils/response');
+const catchAsync = require('../utils/async-handler');
+const { successResponse } = require('../utils/response');
 const authService = require('../services/auth.service');
-const passwordUtils = require('../utils/hash-password');
-const { ERROR } = require('../constants/error-code.constants');
-const {SUCCESS}=require('../constants/success-code.constants')
 
-exports.createUser = async (req, res) => {
-    try {
-        console.log('Request body:', req.body); // Log the request body for debugging
-        const userData = req.body;
+exports.createUser = catchAsync(async (req, res) => {
+  const user = await authService.createUser(req.body);
+  return successResponse(res, 201, 'User registered successfully', user);
+});
 
-        const existingUser = await authService.createUser(userData);
+exports.login = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+  const result = await authService.login(email, password);
+  return successResponse(res, 200, 'Login successful', result);
+});
 
-        if (existingUser) {
-            const success = SUCCESS.USER_CREATED;
-            return successResponse(res, 201, 'User created successfully', existingUser);
-        }
+exports.refreshToken = catchAsync(async (req, res) => {
+  const refreshToken = req.body.refreshToken || req.headers['x-refresh-token'];
+  const result = await authService.refreshToken(refreshToken);
+  return successResponse(res, 200, 'Token refreshed successfully', result);
+});
 
-    } catch (error) {
-        console.error('Error creating user:', error.statusCode); // Log the error for debugging
-        return errorResponse(res, error.statusCode, error.message, error.error);
-    }
-};
+exports.logOut = catchAsync(async (req, res) => {
 
-exports.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const data = await authService.login(email, password);
-        if (!data) {
-             const error=ERROR.USER_NOT_FOUND;
-            return errorResponse(res, error.statusCode, error.message);
-        }
-
-        const success=SUCCESS.LOGIN_SUCCESS
-       return successResponse(res,success.statusCode,success.message,data)
-        
-    } catch (error) {
-        console.log(error)
-        return errorResponse(res, error.statusCode || 500, error.message || 'Internal Server Error', error.error);
-    }
-};
-
-exports.refreshToken= async(req,res)=>{}
+  return successResponse(res, 200, 'Token refreshed successfully', result);
+});

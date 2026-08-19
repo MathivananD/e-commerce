@@ -1,32 +1,37 @@
 const User = require('../models/user');
-const { ERROR } = require('../constants/error-code.constants');
 const passwordUtils = require('../utils/hash-password');
-const AppError = require('../utils/app-error');
+const { NotFoundError, BadRequestError } = require('../utils/app-error');
 
-exports.updateUser = async (userData) => {
-    const existingUser = await User.findOne({
-        email: userData.email
-    });
-    const isPasswordChanged = passwordUtils.verifyPassword(userData.password, existingUser.password);
-    if (!existingUser) {
-        throw new AppError(ERROR.USER_NOT_FOUND);
-    }
+exports.getUser = async (userId) => {
+  const user = await User.findById(userId).select('-password -__v');
 
-    const updatedUser = await User.findByIdAndUpdate(existingUser._id, userData, { new: true });
+  if (!user) {
+    throw new NotFoundError('User profile not found');
+  }
 
-    return updatedUser;
+  return user;
 };
 
+exports.updateUser = async (userId, userData) => {
+  const user = await User.findById(userId);
 
-exports.getUser = async (id) => {
-    const existingUser = await User.findById(id).select('-password -__v');
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
 
-    if (!existingUser) {
-        throw new AppError(ERROR.USER_NOT_FOUND);
+
+  // Prevent email modification if not allowed or check for uniqueness
+  if (userData.email && userData.email !== user.email) {
+    const emailExists = await User.findOne({ email: userData.email });
+    if (emailExists) {
+      throw new BadRequestError('Email address is already in use');
     }
+  }
 
-    
+  const updatedUser = await User.findByIdAndUpdate(userId, userData, {
+    new: true,
+    runValidators: true,
+  }).select('-password -__v');
 
-    return existingUser;
+  return updatedUser;
 };
-

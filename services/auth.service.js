@@ -1,61 +1,82 @@
-const { ERROR } = require('../constants/error-code.constants');
+const User = require('../models/user');
 const passwordUtils = require('../utils/hash-password');
-const AppError = require('../utils/app-error');
 const tokens = require('../utils/jwt');
-const User = require('../models/user')
-
-
+const { ConflictError, NotFoundError, UnauthorizedError } = require('../utils/app-error');
 
 exports.createUser = async (userData) => {
-    const password = await passwordUtils.hashPassword(userData.password);
-    userData.password = password;
-    const existingUser = await User.findOne({
-        email: userData.email
-    });
+  const existingUser = await User.findOne({ email: userData.email });
 
+  if (existingUser) {
+    throw new ConflictError('Email already exists');
+  }
 
-    if (existingUser) {
-        throw new AppError(ERROR.EMAIL_ALREADY_EXISTS);
-    }
+  const hashedPassword = await passwordUtils.hashPassword(userData.password);
 
-    const user = await User.create(userData);
+  const user = await User.create({
+    ...userData,
+    password: hashedPassword,
+  });
 
-    return user;
-}
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.__v;
 
+  return userObject;
+};
 
 exports.login = async (email, password) => {
+  const user = await User.findOne({ email });
 
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-        throw new AppError(ERROR.USER_NOT_FOUND);
-    }
-    console.log("dddddddddddd", email);
-    const isPasswordValid = await passwordUtils.verifyPassword(password, user.password);
-    if (!isPasswordValid) {
-        throw new AppError(ERROR.INVALID_PASSWORD);
-    }
+  const isPasswordValid = await passwordUtils.verifyPassword(password, user.password);
 
-    const token = tokens.generateToken({ userId: user._id, email: user.email });
-    const refreshToken = tokens.generateRefreshToken({ userId: user._id, email: user.email });
-    return { accessToken: token, refreshToken: refreshToken };
-}
+  if (!isPasswordValid) {
+    throw new UnauthorizedError('Invalid email or password');
+  }
 
-exports.refreshToken = async(refreshToken) => {
+  const payload = { userId: user._id, email: user.email, role: user.role };
+  const accessToken = tokens.generateToken(payload);
+  const refreshToken = tokens.generateRefreshToken(payload);
 
-    const decoded = tokens.verifyRefreshToken(refreshToken)
-      
-    if (!decoded) {
-      
-    }
-    const email=decoded.email
-    const user=await User.findOne({email})
-   return generateToken(user._id,user.email)
-}
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.__v;
 
-generateToken=(email, password)=>{
-    const token = tokens.generateToken({ userId: user._id, email: user.email });
-    const refreshToken = tokens.generateRefreshToken({ userId: user._id, email: user.email });
-    return { accessToken: token, refreshToken: refreshToken };
+  return {
+    accessToken,
+    refreshToken,
+    user: userObject,
+  };
+};
+
+exports.refreshToken = async (refreshToken) => {
+  if (!refreshToken) {
+    throw new UnauthorizedError('Refresh token is required');
+  }
+
+  const decoded = tokens.verifyRefreshToken(refreshToken);
+
+  const user = await User.findById(decoded.userId);
+  if (!user) {
+    throw new NotFoundError('User associated with token no longer exists');
+  }
+
+  const payload = { userId: user._id, email: user.email, role: user.role };
+  const newAccessToken = tokens.generateToken(payload);
+  const newRefreshToken = tokens.generateRefreshToken(payload);
+
+  return {
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+  };
+};
+
+exports.logOut = () => {
+
+  return {
+    message: 'Logout successful',
+  };
 }

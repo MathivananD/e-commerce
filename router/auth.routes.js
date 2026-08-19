@@ -1,9 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authController = require('../controller/auth.controller');
-const validate = require('../validators/custom.validators');
-const {authRefreshMiddleWare}=require('../middleware/auth.middleware')
-const { userSchemaValidation, userUpdateSchemaValidation } = require('../validators/user.validation');
+const authController = require("../controller/auth.controller");
+const validate = require("../validators/custom.validators");
+const { authRefreshMiddleWare } = require("../middleware/auth.middleware");
+const {
+  userSchemaValidation,
+  userUpdateSchemaValidation,
+} = require("../validators/user.validation");
 
 /**
  * @openapi
@@ -32,7 +35,11 @@ const { userSchemaValidation, userUpdateSchemaValidation } = require('../validat
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/register',validate(userSchemaValidation),authController.createUser);
+router.post(
+  "/register",
+  validate(userSchemaValidation),
+  authController.createUser,
+);
 
 /**
  * @openapi
@@ -67,9 +74,12 @@ router.post('/register',validate(userSchemaValidation),authController.createUser
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/login', authController.login);
+router.post("/login", authController.login);
 
-router.post('/refreshToken', authRefreshMiddleWare,authController.refreshToken);
+router.post(
+  "/refreshToken",
+  authRefreshMiddleWare,
+  authController.refreshToken,
+);
 
 module.exports = router;
-

@@ -1,29 +1,13 @@
-
+const catchAsync = require('../utils/async-handler');
+const { successResponse } = require('../utils/response');
 const userService = require('../services/user.service');
-const { ERROR } = require('../constants/error-code.constants');
-const { SUCCESS } = require('../constants/success-code.constants');
-const { successResponse, errorResponse } = require('../utils/response');
-const { hashPassword } = require('../utils/hash-password');
 
-exports.updateUser = async (req, res) => {
-    try {
-        const userData = req.body;
-        const updatedUser = await userService.updateUser(userData);
-        const success = SUCCESS.USER_UPDATED;
-        return successResponse(res, 200, 'User updated successfully', updatedUser);
-    } catch (error) {
-        return errorResponse(res, error.statusCode || 500, error.message || 'Internal Server Error', error.error);
-    }
-};
+exports.getUser = catchAsync(async (req, res) => {
+  const user = await userService.getUser(req.userId);
+  return successResponse(res, 200, 'User profile retrieved successfully', user);
+});
 
-exports.getUser = async (req, res) => {
-    try {
-        console.log("ssssssssss",req.userId)
-        const userData = req.body;
-        const updatedUser = await userService.getUser(req.userId);
-        const success = SUCCESS.USER_FETCHED;
-        return successResponse(res, 200, success.message, updatedUser);
-    } catch (error) {
-        return errorResponse(res, error.statusCode || 500, error.message || 'Internal Server Error', error.error);
-    }
-};
+exports.updateUser = catchAsync(async (req, res) => {
+  const updatedUser = await userService.updateUser(req.userId, req.body);
+  return successResponse(res, 200, 'User profile updated successfully', updatedUser);
+});
