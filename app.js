@@ -3,7 +3,10 @@ const dotConfigure = require("./service");
 const app = express();
 const bodyparser = require("body-parser");
 const corsMiddleware = require("./middleware/cors.middleware");
-const { authMiddleWare } = require("./middleware/auth.middleware");
+const {
+  authMiddleWare,
+  adminMiddleWare,
+} = require("./middleware/auth.middleware");
 const errorMiddleware = require("./middleware/error.middleware");
 const { NotFoundError } = require("./utils/app-error");
 const { successResponse } = require("./utils/response");
@@ -70,7 +73,7 @@ app.use("/user", userRouter);
 app.use("/address", addressRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
-app.use("/master-data", masterDataRouter);
+app.use("/master-data", adminMiddleWare, masterDataRouter);
 
 // 404 Unhandled Route Handler
 app.use((req, res, next) => {

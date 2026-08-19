@@ -3,7 +3,7 @@ const catchAsync = require("../utils/async-handler");
 const { successResponse } = require("../utils/response");
 
 exports.createProduct = catchAsync(async (req, res) => {
-  const result = await productService.createProduct(req.body);
+  const result = await productService.createProduct(req.body,req.userId);
   successResponse(res, 200, "Successfull", result);
 });
 

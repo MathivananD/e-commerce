@@ -1,0 +1,107 @@
+{
+  "categories": [
+    {
+      "name": "Electronics",
+      "description": "Gadgets, devices and electronic accessories"
+    },
+    {
+      "name": "Men's Clothing",
+      "description": "Apparel and clothing for men"
+    },
+    {
+      "name": "Women's Clothing",
+      "description": "Apparel and clothing for women"
+    },
+    {
+      "name": "Footwear",
+      "description": "Shoes, sneakers, and sandals"
+    },
+    {
+      "name": "Accessories",
+      "description": "Watches, bags, belts and accessories"
+    }
+  ],
+  "brands": [
+    {
+      "name": "Nike",
+      "logo": "https://example.com/logos/nike.png"
+    },
+    {
+      "name": "Adidas",
+      "logo": "https://example.com/logos/adidas.png"
+    },
+    {
+      "name": "Puma",
+      "logo": "https://example.com/logos/puma.png"
+    },
+    {
+      "name": "Reebok",
+      "logo": "https://example.com/logos/reebok.png"
+    },
+    {
+      "name": "Under Armour",
+      "logo": "https://example.com/logos/underarmour.png"
+    }
+  ],
+  "colors": [
+    {
+      "name": "Red",
+      "hexCode": "#FF0000"
+    },
+    {
+      "name": "Green",
+      "hexCode": "#00FF00"
+    },
+    {
+      "name": "Blue",
+      "hexCode": "#0000FF"
+    },
+    {
+      "name": "Black",
+      "hexCode": "#000000"
+    },
+    {
+      "name": "White",
+      "hexCode": "#FFFFFF"
+    }
+  ],
+  "sizes": [
+    {
+      "name": "Small"
+    },
+    {
+      "name": "Medium"
+    },
+    {
+      "name": "Large"
+    },
+    {
+      "name": "XL"
+    },
+    {
+      "name": "XXL"
+    }
+  ],
+  "materials": [
+    {
+      "name": "Cotton",
+      "description": "100% natural cotton fabric"
+    },
+    {
+      "name": "Polyester",
+      "description": "Durable synthetic polyester fabric"
+    },
+    {
+      "name": "Leather",
+      "description": "Genuine high quality leather"
+    },
+    {
+      "name": "Denim",
+      "description": "Sturdy cotton twill fabric"
+    },
+    {
+      "name": "Silk",
+      "description": "Luxurious smooth silk fabric"
+    }
+  ]
+}

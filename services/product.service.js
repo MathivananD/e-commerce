@@ -1,24 +1,47 @@
 const Product = require("../models/product");
 const ProductVariant = require("../models/product-variant");
+const Color = require("../models/color");
+const Size = require("../models/size");
 const {
   BadRequestError,
   NotFoundError,
   ConflictError,
 } = require("../utils/app-error");
 
-exports.createProduct = async (data) => {
-  const product = await Product.create(data).exec();
+const getSku = (product, color, size) => {
+  return `${product.split(" ")[0]}-${color.slice(0, 3)}-${size.slice(0, 3)}`;
+};
+
+exports.createProduct = async (data, userId) => {
+  const product = await Product.create({ ...data, userId: userId });
+  const colorIds = data.variants.map((variant) => variant.colorId);
+  const sizeIds = data.variants.map((variant) => variant.sizeId);
+
+  const colorData = await Color.find({ _id: { $in: colorIds } });
+  const sizeData = await Size.find({ _id: { $in: sizeIds } });
+
   if (product) {
-    const variants = data.variants.map((variant) => ({
-      ...variant,
-      productId: product._id,
-    }));
+    const variants = data.variants.map((variant) => {
+      const colorDetails = colorData.find(
+        (item) => item._id == variant.colorId,
+      );
+      const sizeDetails = sizeData.find((item) => item._id == variant.sizeId);
+      return {
+        ...variant,
+        sku: getSku(product.name, colorDetails.name, sizeDetails.name),
+        productId: product._id,
+      };
+    });
+    console.log(`Color:  ${colorData}  \n Size:  ${sizeData}`);
+
     const productVariant = await ProductVariant.insertMany(variants);
+
     return { product: product, productVariant: productVariant };
   } else {
     throw new BadRequestError();
   }
 };
+
 exports.getProduct = async () => {
   const product = await Product.find({ isActive: true })
     .populate("categoryId")

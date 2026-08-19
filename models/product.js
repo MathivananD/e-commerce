@@ -35,6 +35,10 @@ const productSchema = new Schema(
       type: Schema.Types.Mixed,
       default: {},
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      default: {},
+    },
     isActive: {
       type: Boolean,
       default: true,
