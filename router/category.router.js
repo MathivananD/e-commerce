@@ -26,7 +26,7 @@ router.put(
 router.post(
   "/add-sub-category",
   middleware.adminMiddleWare,
-  validate(subCategorySchemaValidation),
+  // validate(subCategorySchemaValidation),
   categoryController.addSubCategory,
 );
 router.post(

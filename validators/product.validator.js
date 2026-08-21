@@ -51,8 +51,31 @@ const createProductSchema = z.object({
     .array(createVariantSchema)
     .min(1, "At least one variant is required"),
 });
+const productFilterSchema = z.object({
+  categoryId: z.string().optional(),
 
+  brandIds: z.string().optional(),
+
+  colorIds: z.string().optional(),
+
+  sizeIds: z.string().optional(),
+
+  materialId: z.string().optional(),
+
+  minPrice: z.coerce.number().min(0).optional(),
+
+  maxPrice: z.coerce.number().min(0).optional(),
+
+  search: z.string().trim().optional(),
+
+  page: z.coerce.number().int().min(1).default(1),
+
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+
+  sort: z.enum(["price_asc", "price_desc", "newest"]).default("newest"),
+});
 module.exports = {
   createProductSchema,
   createVariantSchema,
+  productFilterSchema,
 };

@@ -28,7 +28,7 @@ exports.updateCategory = catchAsync(async (req, res) => {
 });
 
 exports.addSubCategory = catchAsync(async (req, res) => {
-  const result = await CategoryService.addSubCategory(req);
+  const result = await CategoryService.addSubCategory(req.body);
   return successResponse(res, 200, "SubCategory added successfully", result);
 });
 

@@ -47,8 +47,6 @@ const authMiddleWare = (req, res, next) => {
  * Authentication middleware for verifying Bearer access token.
  */
 const adminMiddleWare = (req, res, next) => {
-  console.log(req.user);
-
   if (req.user.role !== "admin") {
     throw new ForbiddenError("Access denied. Admin role required");
   }

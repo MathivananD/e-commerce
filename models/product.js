@@ -38,6 +38,7 @@ const productSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       default: {},
+      ref: "User",
     },
     isActive: {
       type: Boolean,

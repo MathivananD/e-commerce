@@ -1,8 +1,12 @@
 const Category = require("../models/categories");
-const { InternalServerError, BadRequestError } = require("../utils/app-error");
+const {
+  InternalServerError,
+  BadRequestError,
+  ConflictError,
+} = require("../utils/app-error");
 
 exports.addCategory = async (body) => {
-  const existinCategory =  Category.findOne({ name: body.name }).exec();
+  const existinCategory = await Category.findOne({ name: body.name });
   if (existinCategory) {
     throw new BadRequestError("Category already exists");
   }
@@ -15,22 +19,22 @@ exports.addCategory = async (body) => {
 };
 
 exports.getCategory = async () => {
-  const category =  Category.find({ parendId: null }).exec();
+  const category = Category.find().exec();
   return category;
 };
 
 exports.getSubCategory = async () => {
-  const category =  Category.find({ parendId: { $ne: null } }).exec();
+  const category = Category.find({ parendId: { $ne: null } }).exec();
   return category;
 };
 
 exports.getSubCategoryById = async (categoryId) => {
-  const category =  Category.find({ parendId: categoryId }).exec();
+  const category = Category.find({ parendId: categoryId }).exec();
   return category;
 };
 
 exports.updateCategory = async (body) => {
-  const category =  Category.findByIdAndUpdate(body.id, body, {
+  const category = Category.findByIdAndUpdate(body.id, body, {
     new: true,
     runValidators: true,
   }).exec();
@@ -41,7 +45,7 @@ exports.updateCategory = async (body) => {
 };
 
 exports.updateSubCategory = async (body) => {
-  const category =  Category.findByIdAndUpdate(body.id, body, {
+  const category = Category.findByIdAndUpdate(body.id, body, {
     new: true,
     runValidators: true,
   }).exec();
@@ -51,8 +55,12 @@ exports.updateSubCategory = async (body) => {
   return category;
 };
 
-exports.addSubCategory = async (req) => {
-  const category =  Category.create(req.body).exec();
+exports.addSubCategory = async (body) => {
+  const isExisting = await Category.insertMany(body);
+  if (isExisting) {
+    throw new ConflictError("Item was already there create with new name");
+  }
+  const category = await Category.create(body);
   if (!category) {
     throw new InternalServerError("Category not created");
   }
